@@ -4,7 +4,7 @@
   "description": "",
   "main": "bot.js",
   "scripts": {
-    "deploy": "claudia create --region us-east-1 --api-module bot --configure-groupme-bot"
+    "deploy": "claudia create --region us-east-1 --api-module bot --configure-groupme-bot --source ./GROUPME-discord/"
   },
   "author": "jwjbadger",
   "license": "GPL-3.0-or-later",
