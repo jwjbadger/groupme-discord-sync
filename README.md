@@ -2,16 +2,23 @@
 
 Syncs messages / announcements between discord and groupme
 
+## Intent
+
+Syncs messages from a private GroupMe to a Discord server so that anyone who doesn't have access to Discord may still use it. Likewise, syncs messages in configured channels (unless a certain prefix is included) to the private GroupMe. Additionally syncs all announcements in configured channels to public GroupMe.
+
 ## Install
 
 These instruction were written to help with an exact step-by-step install, but for those with more experience, the gist is as follows:
+
 1. Create a Discord bot and invite it to your server with permissions integer 17603460459584 ([Discord Setup](#discord-setup))
-2. Create an AWS account and IAM user with access to 'AWSLambda_FullAccess,' ‘IAMFullAccess,' and ‘AmazonAPIGatewayAdministrator’ & create an access key ([AWS Setup](#aws-setup)
+2. Create an AWS account and IAM user with access to 'AWSLambda_FullAccess,' ‘IAMFullAccess,' and ‘AmazonAPIGatewayAdministrator’ & create an access key ([AWS Setup](#aws-setup))
 3. Configure the AWS CLI to use the access key ([Installation Step 5](installation))
 4. Clone the repo and run `npm install` and `npm run deploy` from the root folder ([Installation Steps 6-9](#installation))
 5. Add the Discord bot token to 'config.json' ([Config Step 3](#config))
 6. Create the GroupMe bot for the private server and provide it's information when necessary; use the callback URL provided from `npm run deploy` for this bot ([Installation Steps 10-15](#installation))
 7. Copy the Bot ID you just created to "ALL_GROUPME_BOT_ID" in 'config.json'; Create a new bot for the public server (for announcements) and copy it's ID over ([Config Step 4-7](#config))
+
+Otherwise, use the following install instructions:
 
 ### Discord Setup
 
@@ -120,4 +127,10 @@ These instruction were written to help with an exact step-by-step install, but f
 
 - To update, go to the project directory in your terminal and run `git pull`, `npm update`, and `npm upgrade`
     - You should make a backup of ‘config.json’ because it will be overridden 
-- To restart the bot, open the terminal it’s running in and input ‘Control + C’ (this should stop the command); then re-run `node .` (you shouldn’t have to do anything else) 
+- To restart the bot, open the terminal it’s running in and input ‘Control + C’ (this should stop the command); then re-run `node .` (you shouldn’t have to do anything else)
+
+## TODO
+
+- [ ] Make error message through GroupMe if message has malformed channel information
+- [ ] Make sure all errors from bad information result in an error sent to the proper messaging system instead of a crash
+- [ ] Investigate hosting for Discord bot
