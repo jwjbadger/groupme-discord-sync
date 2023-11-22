@@ -6,7 +6,7 @@ const exec = require('child_process').exec;
 
 function update_claudia() {
     if (fs.existsSync('./claudia.json')) {
-        exec('claudia update --configure-groupme-bot', (error, stdout, stderr) => {
+        exec('claudia update', (error, stdout, stderr) => {
             console.log('CLAUDIA STDOUT: ' + stdout);
             console.log('CLAUDIA STDERR: ' + stderr);
             if (error !== null)
@@ -113,12 +113,14 @@ client.on(Events.MessageCreate, function(message) {
         return;
     }
 
-    axios.post("https://api.groupme.com/v3/bots/post", {
-        "bot_id": config.ALL_GROUPME_BOT_ID,
-        "text": "(" + message.member.displayName + " | " + message.channel.name + ")" + ": " + message.content
-    })
-        .then((response) => { console.log(response.data) })
-        .then((error) => { console.log(error) });
+    if (config.CHANNELS.map(channel => channel.id).indexOf(message.channelId) >= 0) {
+        axios.post("https://api.groupme.com/v3/bots/post", {
+            "bot_id": config.ALL_GROUPME_BOT_ID,
+            "text": "(" + message.member.displayName + " | " + message.channel.name + ")" + ": " + message.content
+        })
+            .then((response) => { console.log(response.data) })
+            .then((error) => { console.log(error) });
+    }
 });
 
 client.login(config.BOT_TOKEN);
