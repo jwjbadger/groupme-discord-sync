@@ -20,7 +20,7 @@ module.exports = botBuilder((request) => {
         let channelIndex = config.CHANNELS.map(e => e.name).indexOf(request.text.substring(1).split(" ")[0]);
         
         if (channelIndex < 0) {
-            aaxios.post(((config.CHANNELS)[0]).url, {
+            axios.post(((config.CHANNELS)[0]).url, {
                 "content": "(INVALID CHANNEL; SENT TO DEFUALT)" + request.originalRequest.name + ": " + request.text,
             })
                 .then((response) => { console.log(response.data) })
