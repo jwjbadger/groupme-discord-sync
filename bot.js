@@ -167,6 +167,8 @@ client.on(Events.MessageCreate, function (message) {
 							'SUCCESS\ncurrent announcements list: <#' +
 								config.ANNOUNCEMENTS_CHANNELS.join('>, <#') +
 								'>'
+								? config.ANNOUNCEMENTS_CHANNELS.length > 0
+								: 'SUCCESS\nNo current announcements channels'
 						);
 					})
 					.catch((e) => {
@@ -176,6 +178,8 @@ client.on(Events.MessageCreate, function (message) {
 			case 'get-announcements':
 				return message.reply(
 					'<#' + config.ANNOUNCEMENTS_CHANNELS.join('>, <#') + '>'
+						? config.ANNOUNCEMENTS_CHANNELS.length > 0
+						: 'No current announcements channels'
 				);
 			case 'add-individual':
 				if (args.length < 2)
@@ -231,10 +235,13 @@ client.on(Events.MessageCreate, function (message) {
 											JSON.stringify(config, null, 2)
 										);
 										message.reply(
-											`SUCCESS: Created webhook ${webhook.name}\ncurrent individual channels available: ` +
+											`SUCCESS: Created webhook ${webhook.name}\n` +
+												('Current individual channels available: ' +
 												config.CHANNELS.map(
 													(e) => e.name
 												).join(', ')
+													? config.CHANNELS.length > 0
+													: 'No current individual channels available')
 										);
 									})
 									.catch(console.error);
@@ -293,10 +300,13 @@ client.on(Events.MessageCreate, function (message) {
 									JSON.stringify(config, null, 2)
 								);
 								message.reply(
-									`SUCCESS\ncurrent individual channels available: ` +
+									'SUCCESS\n' +
+										('Current individual channels available: ' +
 										config.CHANNELS.map((e) => e.name).join(
 											', '
 										)
+											? config.CHANNELS.length > 0
+											: 'No current individual channels available')
 								);
 							})
 							.catch((e) => console.error(e));
@@ -305,8 +315,10 @@ client.on(Events.MessageCreate, function (message) {
 				break;
 			case 'get-individual':
 				return message.reply(
-					'current individual channels available: ' +
+					'Current individual channels available: ' +
 						config.CHANNELS.map((e) => e.name).join(', ')
+						? config.CHANNELS.length > 0
+						: 'No current individual channels available'
 				);
 			default:
 				return message.reply(
