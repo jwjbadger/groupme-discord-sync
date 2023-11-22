@@ -113,7 +113,7 @@ client.on(Events.MessageCreate, function(message) {
         return;
     }
 
-    if (config.CHANNELS.map(channel => channel.id).indexOf(message.channelId) >= 0) {
+    if (config.CHANNELS.map(channel => channel.name).indexOf(message.channel.name) >= 0) {
         axios.post("https://api.groupme.com/v3/bots/post", {
             "bot_id": config.ALL_GROUPME_BOT_ID,
             "text": "(" + message.member.displayName + " | " + message.channel.name + ")" + ": " + message.content
