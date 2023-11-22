@@ -1,13 +1,13 @@
 const { Client, Events, GatewayIntentBits, EmbedBuilder } = require('discord.js');
+const botBuilder = require('claudia-bot-builder')
 const config = require("./config.json");
-const groupme_config = require("./GROUPME-discord/config.json");
 const axios = require('axios');
 const fs = require('fs');
 const exec = require('child_process').exec;
 
 function update_claudia() {
-    if (fs.existsSync('./GROUPME-discord/claudia.json')) {
-        exec('claudia update --configure-groupme-bot --source ./GROUPME-discord', (error, stdout, stderr) => {
+    if (fs.existsSync('./claudia.json')) {
+        exec('claudia update --configure-groupme-bot', (error, stdout, stderr) => {
             console.log('CLAUDIA STDOUT: ' + stdout);
             console.log('CLAUDIA STDERR: ' + stderr);
             if (error !== null)
@@ -64,7 +64,7 @@ client.on(Events.MessageCreate, function(message) {
             case 'add-individual':
                 client.channels.fetch(args[1].replaceAll(/<#|>/g, ''))
                     .then(channel => {
-                        if (groupme_config.CHANNELS.map(e => e.id).indexOf(channel.id) >= 0)
+                        if (config.CHANNELS.map(e => e.id).indexOf(channel.id) >= 0)
                             return message.reply("CHANNEL ALREADY IN USE");
 
                         channel.createWebhook({
@@ -72,28 +72,28 @@ client.on(Events.MessageCreate, function(message) {
                             avatar: 'https://i.imgur.com/AfFp7pu.png',
                         })
                             .then(webhook => {
-                                groupme_config.CHANNELS.push({'id': webhook.id, 'token': webhook.token, 'name': webhook.channel.name, 'url': webhook.url});
+                                config.CHANNELS.push({'id': webhook.id, 'token': webhook.token, 'name': webhook.channel.name, 'url': webhook.url});
 
-                                fs.writeFileSync('GROUPME-discord/config.json', JSON.stringify(groupme_config, null, 2));
-                                message.reply(`SUCCESS: Created webhook ${webhook.name}\ncurrent individual channels available: ` + groupme_config.CHANNELS.map(e => e.name).join(', '));
+                                fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+                                message.reply(`SUCCESS: Created webhook ${webhook.name}\ncurrent individual channels available: ` + config.CHANNELS.map(e => e.name).join(', '));
                             }).catch(console.error);
                     });
                 break;
             case 'rem-individual':
                 message.guild.channels.fetch(args[1].replaceAll(/<#|>/g, '')).then(ref_channel => {
-                    let stored_hook = groupme_config.CHANNELS.find(e => e.name == ref_channel.name);
+                    let stored_hook = config.CHANNELS.find(e => e.name == ref_channel.name);
                 
                     client.fetchWebhook(stored_hook.id, stored_hook.token)
                         .then(webhook => webhook.delete())
                         .catch(console.error);
-                    groupme_config.CHANNELS = groupme_config.CHANNELS.filter(e => e != stored_hook);
+                    config.CHANNELS = config.CHANNELS.filter(e => e != stored_hook);
     
-                    fs.writeFileSync('GROUPME-discord/config.json', JSON.stringify(groupme_config, null, 2));
-                    message.reply(`SUCCESS\ncurrent individual channels available: ` + groupme_config.CHANNELS.map(e => e.name).join(', '));
+                    fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+                    message.reply(`SUCCESS\ncurrent individual channels available: ` + config.CHANNELS.map(e => e.name).join(', '));
                 });
                 break;
             case 'get-individual':
-                return message.reply("current individual channels available: " + groupme_config.CHANNELS.map(e => e.name).join(', '));
+                return message.reply("current individual channels available: " + config.CHANNELS.map(e => e.name).join(', '));
             default:
                 return message.reply("UNKNOWN COMMAND | use `;help` to find all commands");
         }
@@ -123,3 +123,25 @@ client.on(Events.MessageCreate, function(message) {
 });
 
 client.login(config.BOT_TOKEN);
+
+module.exports = botBuilder((request) => {
+    return new Promise((resolve, reject) => {
+        let channelIndex = config.CHANNELS.map(e => e.name).indexOf(request.text.substring(1).split(" ")[0]);
+        
+        if (channelIndex < 0) {
+            axios.post(config.CHANNELS[0].url, {
+                "content": "(INVALID CHANNEL; SENT TO DEFUALT)" + request.originalRequest.name + ": " + request.text,
+            })
+                .then((response) => { console.log(response.data) })
+                .then((error) => { console.log(error) });
+        }
+
+        axios.post(config.CHANNELS[channelIndex].url, {
+            "content": request.originalRequest.name + ": " + request.text.split(" ").slice(1).join(" "),
+        })
+            .then((response) => { console.log(response.data) })
+            .then((error) => { console.log(error) });
+    }).catch(() => {
+        console.error("INVALID PROMISE");
+    });
+});
