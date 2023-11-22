@@ -49,53 +49,93 @@ client.on(Events.MessageCreate, function(message) {
                 message.reply("updating claudia...");
                 break;
             case 'add-announcements':
-                config.ANNOUNCEMENTS_CHANNELS.push(args[1].replaceAll(/<#|>/g, ''));
-                config.ANNOUNCEMENTS_CHANNELS = [...new Set(config.ANNOUNCEMENTS_CHANNELS)];
-                fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
-                message.reply("SUCCESS\ncurrent announcements list: <#" + config.ANNOUNCEMENTS_CHANNELS.join('>, <#') + ">");
+                if (args.length < 2)
+                    return message.reply(config.PREFIX + "add-announcements requires one argument, but " + (args.length - 1) + " provided.");
+
+                message.guild.channels.fetch()
+                    .then((channels) => {
+                        if (channels.map(c => c.id).indexOf(args[1].replaceAll(/<#|>/g, '')) < 0)
+                            return message.reply("INVALID CHANNEL; be sure your first argument is a link to the desired channel like so <#" + message.channelId + ">");
+
+                        config.ANNOUNCEMENTS_CHANNELS.push(args[1].replaceAll(/<#|>/g, ''));
+                        config.ANNOUNCEMENTS_CHANNELS = [...new Set(config.ANNOUNCEMENTS_CHANNELS)];
+                        fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+                        message.reply("SUCCESS\ncurrent announcements list: <#" + config.ANNOUNCEMENTS_CHANNELS.join('>, <#') + ">");
+                    }).catch((e) => {
+                        console.error(e);
+                    });
                 break; 
             case 'rem-announcements':
-                config.ANNOUNCEMENTS_CHANNELS = config.ANNOUNCEMENTS_CHANNELS.filter(e => e != args[1].replaceAll(/<#|>/g, ''));
-                fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
-                message.reply("SUCCESS\ncurrent announcements list: <#" + config.ANNOUNCEMENTS_CHANNELS.join('>, <#') + ">");
+                if (args.length < 2)
+                    return message.reply(config.PREFIX + "add-announcements requires one argument, but " + (args.length - 1) + " provided.");
+                
+                message.guild.channels.fetch()
+                    .then((channels) => {
+                        if (channels.map(c => c.id).indexOf(args[1].replaceAll(/<#|>/g, '')) < 0)
+                            return message.reply("INVALID CHANNEL; be sure your first argument is a link to the desired channel like so <#" + message.channelId + ">");
+
+                        config.ANNOUNCEMENTS_CHANNELS = config.ANNOUNCEMENTS_CHANNELS.filter(e => e != args[1].replaceAll(/<#|>/g, ''));
+                        fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+                        message.reply("SUCCESS\ncurrent announcements list: <#" + config.ANNOUNCEMENTS_CHANNELS.join('>, <#') + ">");
+                    }).catch(e => {
+                        console.error(e);
+                    });
                 break;
             case 'get-announcements':
                 return message.reply("<#" + config.ANNOUNCEMENTS_CHANNELS.join('>, <#') + ">");
             case 'add-individual':
-                client.channels.fetch(args[1].replaceAll(/<#|>/g, ''))
-                    .then(channel => {
-                        if (config.CHANNELS.map(e => e.id).indexOf(channel.id) >= 0)
-                            return message.reply("CHANNEL ALREADY IN USE");
+                if (args.length < 2)
+                    return message.reply(config.PREFIX + "add-announcements requires one argument, but " + (args.length - 1) + " provided.");
 
-                        channel.createWebhook({
-                            name: 'INDIVIDUAL-' + channel.name,
-                            avatar: 'https://i.imgur.com/AfFp7pu.png',
-                        })
-                            .then(webhook => {
-                                config.CHANNELS.push({'id': webhook.id, 'token': webhook.token, 'name': webhook.channel.name, 'url': webhook.url});
+                    message.guild.channels.fetch()
+                        .then((channels) => {
+                            let channelIndex = channels.map(c => c.id).indexOf(args[1].replaceAll(/<#|>/g, ''));
+                            if (channelIndex < 0)
+                                return message.reply("INVALID CHANNEL; be sure your first argument is a link to the desired channel like so <#" + message.channelId + ">");
 
-                                fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
-                                message.reply(`SUCCESS: Created webhook ${webhook.name}\ncurrent individual channels available: ` + config.CHANNELS.map(e => e.name).join(', '));
-                            }).catch(console.error);
-                    });
+                            let channel = channel[channelIndex];
+
+                            if (config.CHANNELS.map(e => e.id).indexOf(channel.id) >= 0)
+                                return message.reply("CHANNEL ALREADY IN USE");
+
+                            channel.createWebhook({
+                                name: 'INDIVIDUAL-' + channel.name,
+                                avatar: 'https://i.imgur.com/AfFp7pu.png',
+                            })
+                                .then(webhook => {
+                                    config.CHANNELS.push({'id': webhook.id, 'token': webhook.token, 'name': webhook.channel.name, 'url': webhook.url});
+
+                                    fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+                                    message.reply(`SUCCESS: Created webhook ${webhook.name}\ncurrent individual channels available: ` + config.CHANNELS.map(e => e.name).join(', '));
+                                }).catch(console.error);
+                        }).catch(e => console.error(e));
                 break;
             case 'rem-individual':
-                message.guild.channels.fetch(args[1].replaceAll(/<#|>/g, '')).then(ref_channel => {
-                    let stored_hook = config.CHANNELS.find(e => e.name == ref_channel.name);
-                
-                    client.fetchWebhook(stored_hook.id, stored_hook.token)
-                        .then(webhook => webhook.delete())
-                        .catch(console.error);
-                    config.CHANNELS = config.CHANNELS.filter(e => e != stored_hook);
-    
-                    fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
-                    message.reply(`SUCCESS\ncurrent individual channels available: ` + config.CHANNELS.map(e => e.name).join(', '));
-                });
+                if (args.length < 2)
+                    return message.reply(config.PREFIX + "add-announcements requires one argument, but " + (args.length - 1) + " provided.");
+
+                    message.guild.channels.fetch()
+                        .then((channels) => {
+                            let channelIndex = channels.map(c => c.id).indexOf(args[1].replaceAll(/<#|>/g, ''));
+                            if (channelIndex < 0)
+                                return message.reply("INVALID CHANNEL; be sure your first argument is a link to the desired channel like so <#" + message.channelId + ">");
+
+                            let ref_channel = channel[channelIndex];
+                            let stored_hook = config.CHANNELS.find(e => e.name == ref_channel.name);
+                        
+                            client.fetchWebhook(stored_hook.id, stored_hook.token)
+                                .then(webhook => webhook.delete())
+                                .catch(console.error);
+                            config.CHANNELS = config.CHANNELS.filter(e => e != stored_hook);
+            
+                            fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+                            message.reply(`SUCCESS\ncurrent individual channels available: ` + config.CHANNELS.map(e => e.name).join(', '));
+                        }).catch(e => console.error(e));
                 break;
             case 'get-individual':
                 return message.reply("current individual channels available: " + config.CHANNELS.map(e => e.name).join(', '));
             default:
-                return message.reply("UNKNOWN COMMAND | use `;help` to find all commands");
+                return message.reply("UNKNOWN COMMAND | use `" + config.PREFIX + "help` to find all commands");
         }
 
         update_claudia();
