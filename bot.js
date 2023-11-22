@@ -165,9 +165,10 @@ client.on(Events.MessageCreate, function (message) {
 						);
 						message.reply(
 							'SUCCESS\ncurrent announcements list: <#' +
-								config.ANNOUNCEMENTS_CHANNELS.join('>, <#') +
-								'>'
-								? config.ANNOUNCEMENTS_CHANNELS.length > 0
+								config.ANNOUNCEMENTS_CHANNELS.length >
+								0
+								? config.ANNOUNCEMENTS_CHANNELS.join('>, <#') +
+										'>'
 								: 'SUCCESS\nNo current announcements channels'
 						);
 					})
@@ -177,8 +178,10 @@ client.on(Events.MessageCreate, function (message) {
 				break;
 			case 'get-announcements':
 				return message.reply(
-					'<#' + config.ANNOUNCEMENTS_CHANNELS.join('>, <#') + '>'
-						? config.ANNOUNCEMENTS_CHANNELS.length > 0
+					config.ANNOUNCEMENTS_CHANNELS.length > 0
+						? '<#' +
+								config.ANNOUNCEMENTS_CHANNELS.join('>, <#') +
+								'>'
 						: 'No current announcements channels'
 				);
 			case 'add-individual':
@@ -237,10 +240,11 @@ client.on(Events.MessageCreate, function (message) {
 										message.reply(
 											`SUCCESS: Created webhook ${webhook.name}\n` +
 												('Current individual channels available: ' +
-												config.CHANNELS.map(
-													(e) => e.name
-												).join(', ')
-													? config.CHANNELS.length > 0
+													config.CHANNELS.length >
+												0
+													? config.CHANNELS.map(
+															(e) => e.name
+													  ).join(', ')
 													: 'No current individual channels available')
 										);
 									})
@@ -302,10 +306,11 @@ client.on(Events.MessageCreate, function (message) {
 								message.reply(
 									'SUCCESS\n' +
 										('Current individual channels available: ' +
-										config.CHANNELS.map((e) => e.name).join(
-											', '
-										)
-											? config.CHANNELS.length > 0
+											config.CHANNELS.length >
+										0
+											? config.CHANNELS.map(
+													(e) => e.name
+											  ).join(', ')
 											: 'No current individual channels available')
 								);
 							})
@@ -316,8 +321,9 @@ client.on(Events.MessageCreate, function (message) {
 			case 'get-individual':
 				return message.reply(
 					'Current individual channels available: ' +
-						config.CHANNELS.map((e) => e.name).join(', ')
-						? config.CHANNELS.length > 0
+						config.CHANNELS.length >
+						0
+						? config.CHANNELS.map((e) => e.name).join(', ')
 						: 'No current individual channels available'
 				);
 			default:
