@@ -1,0 +1,16 @@
+{
+  "name": "discord-groupme",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bot.js",
+  "scripts": {
+    "deploy": "claudia create --region us-east-1 --api-module bot --configure-groupme-bot"
+  },
+  "author": "jwjbadger",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "axios": "^1.6.2",
+    "discord.js": "^14.14.1",
+    "claudia-bot-builder": "^4.5.0"
+  }
+}
