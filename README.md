@@ -33,7 +33,7 @@ Otherwise, use the following install instructions:
 5. Go down to the ‘Privileged Gateway Intents’ section and enable ‘MESSAGE CONTENT INTENT’
 6. Click ‘OAuth2’ on the left side of the screen
 7. Click ‘URL Generator’ under it
-8. Under ’Scopes’ select ‘bot’ 
+8. Under ’Scopes’ select ‘bot’
 9. Copy the link that it creates for you; it should look something like this: “https://discord.com/api/oauth2/authorize?client_id=2136635404190073188&permissions=0&scope=bot”
 10. In the link above (USE YOUR OWN LINK, NOT MINE), change the permissions number (‘permissions=0’) within the link to 17603460459584 (‘permissions=17603460459584’); For example, my link would look like: “https://discord.com/api/oauth2/authorize?client_id=2136635404190073188&permissions=17603460459584&scope=bot” (AGAIN -> USE YOUR OWN LINK)
 11. Now go to the link you have created
@@ -44,7 +44,7 @@ Otherwise, use the following install instructions:
 
 ### AWS Setup
 
-1. Click the link https://portal.aws.amazon.com/billing/signup#/start/email 
+1. Click the link https://portal.aws.amazon.com/billing/signup#/start/email
 2. Enter your email and a valid username
 3. Copy the verification code from your email and enter it
 4. Create a valid password
@@ -82,7 +82,7 @@ Otherwise, use the following install instructions:
 
 #### Installation
 
-1. Install Git from this page https://git-scm.com/downloads 
+1. Install Git from this page https://git-scm.com/downloads
 2. Install Node.js and NPM from this page https://nodejs.org/en/download/
 3. Go to the following page https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html and follow the instructions to install the AWS CLI for your computer
 4. Run the following command in a terminal (AFTER INSTALLING NPM/NODE) `npm install claudia -G`)
@@ -116,21 +116,21 @@ Otherwise, use the following install instructions:
 
 ## Usage
 
-- Run the help command by sending ‘;help’ anywhere in the discord (or use the prefix you set)
-- Prepend ‘]’ (square bracket) to your message in order to hide it from the GroupMe
-- Configure the bot using commands shown from ‘;help’
-    - Note, the AWS bot will be automatically updated, but it takes time; the AWS bot may lag behind any changes you make by up to a minute
-- Be sure to set the announcements channel and individual channels to be forwarded before beginning or nothing will appear to work
-    - Use commands from ‘;help’
+-   Run the help command by sending ‘;help’ anywhere in the discord (or use the prefix you set)
+-   Prepend ‘]’ (square bracket) to your message in order to hide it from the GroupMe
+-   Configure the bot using commands shown from ‘;help’
+    -   Note, the AWS bot will be automatically updated, but it takes time; the AWS bot may lag behind any changes you make by up to a minute
+-   Be sure to set the announcements channel and individual channels to be forwarded before beginning or nothing will appear to work
+    -   Use commands from ‘;help’
 
 ## Updating / Rebooting
 
-- To update, go to the project directory in your terminal and run `git pull`, `npm update`, and `npm upgrade`
-    - You should make a backup of ‘config.json’ because it will be overridden 
-- To restart the bot, open the terminal it’s running in and input ‘Control + C’ (this should stop the command); then re-run `node .` (you shouldn’t have to do anything else)
+-   To update, go to the project directory in your terminal and run `git pull`, `npm update`, and `npm upgrade`
+    -   You should make a backup of ‘config.json’ because it will be overridden
+-   To restart the bot, open the terminal it’s running in and input ‘Control + C’ (this should stop the command); then re-run `node .` (you shouldn’t have to do anything else)
 
 ## TODO
 
-- [ ] Make error message through GroupMe if message has malformed channel information
-- [ ] Make sure all errors from bad information result in an error sent to the proper messaging system instead of a crash
-- [ ] Investigate hosting for Discord bot
+-   [ ] Make error message through GroupMe if message has malformed channel information
+-   [ ] Make sure all errors from bad information result in an error sent to the proper messaging system instead of a crash
+-   [ ] Investigate hosting for Discord bot
