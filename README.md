@@ -13,8 +13,8 @@ These instruction were written to help with an exact step-by-step install, but f
 1. Create a Discord bot and invite it to your server with permissions integer 17603460459584 ([Discord Setup](#discord-setup))
 2. Create an AWS account and IAM user with access to 'AWSLambda_FullAccess,' ‘IAMFullAccess,' and ‘AmazonAPIGatewayAdministrator’ & create an access key ([AWS Setup](#aws-setup))
 3. Configure the AWS CLI to use the access key ([Installation Step 5](installation))
-4. Clone the repo and run `npm install` and `npm run deploy` from the root folder ([Installation Steps 6-9](#installation))
-5. Add the Discord bot token to 'config.json' ([Config Step 3](#config))
+4. Add the Discord bot token to 'config.json' ([Config Step 3](#config))
+5. Clone the repo and run `npm install` and `npm run deploy` from the root folder ([Installation Steps 6-9](#installation))
 6. Create the GroupMe bot for the private server and provide it's information when necessary; use the callback URL provided from `npm run deploy` for this bot ([Installation Steps 10-15](#installation))
 7. Copy the Bot ID you just created to "ALL_GROUPME_BOT_ID" in 'config.json'; Create a new bot for the public server (for announcements) and copy it's ID over ([Config Step 4-7](#config))
 

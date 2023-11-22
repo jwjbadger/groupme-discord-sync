@@ -45,6 +45,7 @@ client.on(Events.MessageCreate, function(message) {
                 .setFooter({ text: 'Please send any requests for projects to jwjbadger on Discord', iconURL: 'https://cdn.discordapp.com/avatars/810923173137874944/617e52cae8dab4996a80500875fbb2e9.webp?size=512' })]});
                 return;
             case 'update-claudia':
+                update_claudia();
                 message.reply("updating claudia...");
                 break;
             case 'add-announcements':
